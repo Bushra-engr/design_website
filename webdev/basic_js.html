@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Expense Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Arial, sans-serif; background: #f4f6f8; display: flex; justify-content: center; padding: 40px 16px; }
+  .card { background: #fff; width: 100%; max-width: 420px; border-radius: 10px; padding: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .subtitle { color: #777; font-size: 13px; margin-bottom: 16px; }
+  .balance { text-align: center; padding: 16px; border-radius: 8px; background: #f0f4ff; margin-bottom: 16px; }
+  .balance span { display: block; font-size: 24px; font-weight: bold; }
+  .summary { display: flex; justify-content: space-between; margin-bottom: 20px; }
+  .summary div { text-align: center; flex: 1; }
+  .summary .label { font-size: 12px; color: #777; }
+  .summary .income { color: #1a9c4a; font-weight: bold; }
+  .summary .expense { color: #d93025; font-weight: bold; }
+  form { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+  input, select { padding: 8px; border: 1px solid #ccc; border-radius: 6px; font-size: 14px; }
+  button { padding: 10px; border: none; border-radius: 6px; background: #4a63e7; color: #fff; font-weight: bold; cursor: pointer; }
+  button:hover { background: #394fc7; }
+  ul { list-style: none; max-height: 220px; overflow-y: auto; }
+  li { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 14px; }
+  li .amt.income { color: #1a9c4a; }
+  li .amt.expense { color: #d93025; }
+  li button { background: transparent; color: #999; font-size: 12px; padding: 2px 6px; }
+  li button:hover { color: #d93025; background: transparent; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>Expense Tracker</h1>
+  <p class="subtitle">Track income and expenses</p>
+
+  <div class="balance">
+    <span class="label">Current Balance</span>
+    <span id="balance">₹0</span>
+  </div>
+
+  <div class="summary">
+    <div>
+      <p class="label">Income</p>
+      <p id="totalIncome" class="income">₹0</p>
+    </div>
+    <div>
+      <p class="label">Expense</p>
+      <p id="totalExpense" class="expense">₹0</p>
+    </div>
+  </div>
+
+  <form id="form">
+    <input type="text" id="desc" placeholder="Description" required />
+    <input type="number" id="amount" placeholder="Amount" required />
+    <select id="type">
+      <option value="income">Income</option>
+      <option value="expense">Expense</option>
+    </select>
+    <button type="submit">Add Transaction</button>
+  </form>
+
+  <ul id="list"></ul>
+</div>
+
+<script>
+  // Load saved transactions from localStorage, or start empty
+  let transactions = JSON.parse(localStorage.getItem("transactions")) || [];
+
+  const form = document.getElementById("form");
+  const list = document.getElementById("list");
+  const balanceEl = document.getElementById("balance");
+  const incomeEl = document.getElementById("totalIncome");
+  const expenseEl = document.getElementById("totalExpense");
+
+  // Save current transactions array to localStorage
+  function saveToStorage() {
+    localStorage.setItem("transactions", JSON.stringify(transactions));
+  }
+
+  // Recalculate totals and re-render everything
+  function render() {
+    list.innerHTML = "";
+
+    transactions.forEach((t) => {
+      const li = document.createElement("li");
+      const sign = t.type === "income" ? "+" : "-";
+      li.innerHTML = `
+        <span>${t.desc}</span>
+        <span class="amt ${t.type}">${sign}₹${t.amount}</span>
+        <button data-id="${t.id}">✕</button>
+      `;
+      list.appendChild(li);
+    });
+
+    const income = transactions
+      .filter((t) => t.type === "income")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const expense = transactions
+      .filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    incomeEl.textContent = `₹${income}`;
+    expenseEl.textContent = `₹${expense}`;
+    balanceEl.textContent = `₹${income - expense}`;
+
+    saveToStorage();
+  }
+
+  // Handle form submit — add new transaction
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const desc = document.getElementById("desc").value.trim();
+    const amount = parseFloat(document.getElementById("amount").value);
+    const type = document.getElementById("type").value;
+
+    if (!desc || isNaN(amount) || amount <= 0) return;
+
+    transactions.push({ id: Date.now(), desc, amount, type });
+
+    form.reset();
+    render();
+  });
+
+  // Event delegation: one listener on the list handles all delete buttons
+  list.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      const id = Number(e.target.dataset.id);
+      transactions = transactions.filter((t) => t.id !== id);
+      render();
+    }
+  });
+
+  render();
+</script>
+
+</body>
+</html>

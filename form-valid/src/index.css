@@ -1,0 +1,169 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  width: 100%;
+}
+
+.main {
+  min-height: 100vh;
+  width: 100%;
+  background-color: beige;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 30px;
+}
+
+/* FORM */
+
+form {
+  background-color: rgb(231, 166, 166);
+
+  display: flex;
+  flex-direction: column;
+
+  width: 400px;
+  max-width: 100%;
+
+  padding: 30px;
+  border-radius: 20px;
+
+  gap: 12px;
+
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+#hide{
+  display: none;
+}
+
+/* HEADING */
+
+h1 {
+  color: black;
+  font-weight: 500;
+  text-align: center;
+  font-size: 25px;
+
+  margin-bottom: 10px;
+}
+
+/* EACH FORM ROW */
+
+.block {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  width: 100%;
+}
+
+/* MAIN LABELS */
+
+.block > label {
+  width: 105px;
+  flex-shrink: 0;
+}
+
+/* INPUTS */
+
+input,
+select,
+textarea {
+  width: 100%;
+
+  padding: 9px 10px;
+
+  border: 1px solid #ccc;
+  border-radius: 7px;
+
+  font-size: 15px;
+
+  outline: none;
+}
+
+/* TEXTAREA */
+
+textarea {
+  resize: vertical;
+}
+
+/* RADIO BUTTONS - IMPORTANT */
+
+input[type="radio"] {
+  width: auto;
+  padding: 0;
+
+  margin-left: 55px;
+
+  cursor: pointer;
+}
+
+/* GENDER LABELS */
+
+.block label[for="male"],
+.block label[for="female"] {
+  width: auto;
+  flex-shrink: 1;
+
+  margin-left: -6px;
+}
+
+/* BUTTON */
+
+button {
+  width: 50%;
+
+  padding: 12px;
+
+  border: none;
+  border-radius: 25px;
+
+  background-color: black;
+  color: white;
+
+  font-size: 17px;
+
+  cursor: pointer;
+
+  align-self: center;
+
+  margin-top: 10px;
+}
+
+button:hover {
+  opacity: 0.75;
+}
+
+
+
+.submitted-data {
+  width: 400px;
+  padding: 30px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+.submitted-data h2 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+.submitted-data p {
+  margin: 8px 0;
+}
+
